@@ -34,7 +34,7 @@ public:
 
         if (!sConfigMgr->GetBoolDefault("RewardShopEnable", 0))
             return false;
-        
+
 
         std::string text = "Enter code and press accept";
         player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_CHAT, "I'd like to redeem my code.", GOSSIP_SENDER_MAIN, 1, text, 0, true);
@@ -48,7 +48,7 @@ public:
     }
 
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /* sender */, uint32 action)
     {
         player->PlayerTalkClass->ClearMenus();
         std::string info = sConfigMgr->GetStringDefault("WebsiteAddress", "You can get codes by visiting the online store at (website address)");
@@ -94,7 +94,7 @@ public:
         return true;
     }
 
-    bool OnGossipSelectCode(Player* player, Creature* creature, uint32 sender, uint32, const char* code)
+    bool OnGossipSelectCode(Player* player, Creature* creature, uint32 /* sender */, uint32, const char* code)
     {
         uint32 playerguid = player->GetGUID();
         std::string playerIP = player->GetSession()->GetRemoteAddress();
@@ -124,12 +124,10 @@ public:
         do
         {
                 Field* fields = result->Fetch();
-                uint32 id = fields[0].GetUInt32();
                 uint32 action = fields[1].GetUInt32();
                 uint32 action_data = fields[2].GetUInt32();
                 uint32 quantity = fields[3].GetUInt32();
                 uint32 status = fields[4].GetInt32();
-                uint32 nospace = 0;
                 int count = 1;
                 uint32 noSpaceForCount = 0;
                 ItemPosCountVec dest;
@@ -180,7 +178,7 @@ public:
                     ChatHandler(player->GetSession()).PSendSysMessage("CHAT OUTPUT: Please log out for race change.");
                     break;
                 }
-            
+
         } while (result->NextRow());
 
         CharacterDatabase.PQuery("UPDATE reward_shop SET status = 1, PlayerGUID = '%u', PlayerIP = '%s' WHERE code = '%s'", playerguid, playerIP.c_str(), rewardcode.c_str());
