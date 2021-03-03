@@ -233,30 +233,7 @@ public:
     }
 };
 
-class reward_shop_conf : public WorldScript
-{
-public:
-    reward_shop_conf() : WorldScript("reward_shop_conf") { }
-
-    void OnBeforeConfigLoad(bool reload) override
-    {
-        if (!reload) {
-            std::string conf_path = _CONF_DIR;
-            std::string cfg_file = conf_path + "/reward_shop.conf";
-#ifdef WIN32
-            cfg_file = "reward_shop.conf";
-#endif
-            std::string cfg_def_file = cfg_file + ".dist";
-
-            sConfigMgr->LoadMore(cfg_def_file.c_str());
-
-            sConfigMgr->LoadMore(cfg_file.c_str());
-        }
-    }
-};
-
 void AddRewardShopScripts()
 {
     new reward_shop();
-    new reward_shop_conf();
 }
