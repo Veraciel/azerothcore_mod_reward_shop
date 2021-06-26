@@ -40,13 +40,15 @@ public:
 
 
         std::string text = "Enter code and press accept";
-        player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_CHAT, "I'd like to redeem my code.", GOSSIP_SENDER_MAIN, 1, text, 0, true);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "How do i get a code?", GOSSIP_SENDER_MAIN, 2);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I dont have a code.", GOSSIP_SENDER_MAIN, 3);
-        if (sConfigMgr->GetBoolDefault("AllowGM", 1))
-            if (player->IsGameMaster())
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, "[GM] I would like generate a code.", GOSSIP_SENDER_MAIN, 4);
-        player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I'd like to redeem my code.", GOSSIP_SENDER_MAIN, 1, text, 0, true);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How do i get a code?", GOSSIP_SENDER_MAIN, 2);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I dont have a code.", GOSSIP_SENDER_MAIN, 3);
+
+        if (sConfigMgr->GetBoolDefault("AllowGM", 1) && player->IsGameMaster()) {
+            AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "[GM] I would like generate a code.", GOSSIP_SENDER_MAIN, 4);
+        }
+
+        SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         return true;
     }
 
@@ -69,17 +71,17 @@ public:
         {
         case 2:
             creature->MonsterWhisper(info.c_str(), player, false);
-            player->CLOSE_GOSSIP_MENU();
+            CloseGossipMenuFor(player);
             break;
         case 3:
-            player->CLOSE_GOSSIP_MENU();
+            CloseGossipMenuFor(player);
             break;
         case 4:
             player->PlayerTalkClass->ClearMenus();
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I'd like to generate a name change code.", GOSSIP_SENDER_MAIN, 6);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I'd like to generate a faction change code.", GOSSIP_SENDER_MAIN, 7);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I'd like to generate a race change code.", GOSSIP_SENDER_MAIN, 8);
-            player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I'd like to generate a name change code.", GOSSIP_SENDER_MAIN, 6);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I'd like to generate a faction change code.", GOSSIP_SENDER_MAIN, 7);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I'd like to generate a race change code.", GOSSIP_SENDER_MAIN, 8);
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 6:
             CharacterDatabase.PQuery("INSERT INTO `reward_shop` (`action`, `action_data`, `quantity`, `code`, `status`, `PlayerGUID`, `PlayerIP`, `CreatedBy`) VALUES(3, 0, 0, '%s', 0, 0, '0', '%s')", randomcode.str().c_str(), CreatedBy.c_str());
@@ -118,7 +120,7 @@ public:
             player->PlayDirectSound(9638); // No
             creature->MonsterWhisper(messageCode.str().c_str(), player);
             creature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-            player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             return false;
         }
 
@@ -142,7 +144,7 @@ public:
                     player->PlayDirectSound(9638); // No
                     creature->MonsterWhisper(messageCode.str().c_str(), player);
                     creature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-                    player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+                    SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
                     return false;
                 }
                 switch (action)
