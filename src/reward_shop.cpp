@@ -70,7 +70,7 @@ public:
         switch (action)
         {
         case 2:
-            creature->MonsterWhisper(info.c_str(), player, false);
+            creature->Whisper(info.c_str(), LANG_UNIVERSAL, player);
             CloseGossipMenuFor(player);
             break;
         case 3:
@@ -118,7 +118,7 @@ public:
         if (!result)
         {
             player->PlayDirectSound(9638); // No
-            creature->MonsterWhisper(messageCode.str().c_str(), player);
+            creature->Whisper(messageCode.str().c_str(), LANG_UNIVERSAL, player);
             creature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             return false;
@@ -142,7 +142,7 @@ public:
                 if (status == 1)
                 {
                     player->PlayDirectSound(9638); // No
-                    creature->MonsterWhisper(messageCode.str().c_str(), player);
+                    creature->Whisper(messageCode.str().c_str(), LANG_UNIVERSAL, player);
                     creature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
                     SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
                     return false;
@@ -219,7 +219,7 @@ public:
             {
                 if (canSay)
                 {
-                    me->MonsterSay("Do you have a code to redeem? Step right up!", LANG_UNIVERSAL, NULL);
+                    me->Say("Do you have a code to redeem? Step right up!", LANG_UNIVERSAL);
                     me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
                     say_timer = 61000;
                 }
