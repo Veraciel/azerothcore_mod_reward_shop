@@ -1,9 +1,0 @@
-CU_SET_PATH("CMAKE_REWARD_SHOP_DIR" "${CMAKE_CURRENT_LIST_DIR}")
-
-AC_ADD_SCRIPT("${CMAKE_CURRENT_LIST_DIR}/src/reward_shop.cpp")
-
-AC_ADD_SCRIPT_LOADER("RewardShop"      "${CMAKE_CURRENT_LIST_DIR}/src/loader.h")
-
-AC_ADD_CONFIG_FILE("${CMAKE_CURRENT_LIST_DIR}/conf/reward_shop.conf.dist")
-
-message("-- REWARD SHOP CONFIGURED --")
